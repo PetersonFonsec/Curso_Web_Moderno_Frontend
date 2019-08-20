@@ -9,10 +9,10 @@
 
 <script>
 import { mapState } from 'vuex'
-import Header from '@/components/template/Header'
-import Footer from '@/components/template/Footer'
+import Header  from '@/components/template/Header'
+import Footer  from '@/components/template/Footer'
 import Content from '@/components/template/Content'
-import Menu from '@/components/Menu'
+import Menu    from '@/components/Menu'
 
 export default {
 	name: "App",
