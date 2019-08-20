@@ -12,13 +12,13 @@
 
         <div class="user-dropdown-content">
 
-            <a href="#">
+            <router-link tag="a" to="/admin">
                 <i class="fa fa-cogs"></i>Administração
-            </a>
+            </router-link>
 
-            <a href="#">
+            <router-link tag="a" to="/logout">
                 <i class="fa fa-sign-out"></i>Sair
-            </a>
+            </router-link>
 
         </div>
     </div>
