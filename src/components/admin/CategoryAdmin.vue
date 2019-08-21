@@ -2,41 +2,31 @@
   <div class="category-admin">
     <b-form>
       <input type="hidden" v-model="category.id" />
-      <b-row>
-        <b-col xs='12'>
-          <b-form-group label="Nome" for="category-name">
-            <b-input
-              id="category-name"
-              type="text"
-              v-model="category.name" 
-              placeholder="Informe o nome da Categoria"/>
-          </b-form-group>
-        </b-col>
-      </b-row>
-     
-      <b-row>
-        <b-col xs='12'>
-          <b-form-group label="Categoria Pai" for="category-parent-name">
-            <b-form-select
-              v-model="category.parantId"
-              id="category-parent-name"
-              type="text"
-              :options="options" 
-              placeholder="Informe o nome do pai da Categoria"/>
-          </b-form-group>
-        </b-col>
 
-      </b-row>
-
-      <b-row>
-        <b-col sm="12">
-          <b-button variant="primary" v-if="mode === 'save'"   @click="save"> Salvar </b-button>
-          <b-button variant="danger" v-if="mode === 'remove'" @click="remove"> Excluir </b-button>
-          
-          <b-button @click="reset" class="ml-2"> Cancelar </b-button>
-        </b-col>
-      </b-row>
-
+      <b-form-group label="Nome" for="category-name">
+        <b-input
+          id="category-name"
+          type="text"
+          v-model="category.name" 
+          :readonly="mode === 'remove'"
+          placeholder="Informe o nome da Categoria"/>
+      </b-form-group>
+  
+      <b-form-group label="Categoria Pai" for="category-parent-name">
+        <b-form-select
+          v-show="mode === 'save'"
+          v-model="category.parantId"
+          id="category-parent-name"
+          type="text"
+          :options="options" 
+          placeholder="Informe o nome do pai da Categoria"/>
+      </b-form-group>
+  
+      <b-button variant="primary" v-if="mode === 'save'"   @click="save"> Salvar </b-button>
+      <b-button variant="danger" v-if="mode === 'remove'" @click="remove"> Excluir </b-button>
+      
+      <b-button @click="reset" class="ml-2"> Cancelar </b-button>
+      
     </b-form>
 
     <hr>
@@ -88,23 +78,21 @@ export default {
     },
     async loadCategories(){
       const url = `${baseApiUrl}/categories`
-      
-      const categories = await axios.get(url)
+      const result = await axios.get(url)
 
-      if(categories.status === 200 ){
-        this.categories = categories.data
-        this.createOptions(categories.data)
+      if(result.status === 200 ){
+        this.categories = result.data
+        this.createOptions(result.data)
       }else{
-        showError( categories.data )
-      }     
-      
+        showError( result.data )
+      }
     },
     loadCategory(category, mode='save'){
       this.category = { ...category }
       this.mode = mode
     },
     createOptions(categories){
-      this.options = categories.map( c => ({ value: c.id, text: c.name  }) )
+      this.options = categories.map( c => ({ value: c.id, text: c.path  }) )
     },
     save(){
       const method = this.category.id ? 'put' : 'post'
@@ -113,14 +101,14 @@ export default {
       
       axios[method]( url, this.category )
         .then( () => this.$toasted.global.defaultSuccess() && this.reset())
-        .catch( err => showError(err.msg) )
+        .catch( showError )
     },
     remove(){
       const url = `${ baseApiUrl }/categories/${ this.category.id }`
       
       axios.delete( url )
         .then( () => this.$toasted.global.defaultSuccess() && this.reset())
-        .catch( err => showError(err.msg) )
+        .catch( showError )
     },
   },
   mounted(){
