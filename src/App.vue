@@ -1,7 +1,7 @@
 <template>
-	<div id="app" :class="{ 'hideMenu' : !isMenuVisible }">
-		<Header title="Pet - conhecimento" :hideToggle="false" :hideUserDropdown="false"/>
-		<Menu/>
+	<div id="app" :class="{ 'hideMenu' : !isMenuVisible || !user }">
+		<Header title="Pet - conhecimento" :hideToggle="!user" :hideUserDropdown="!user"/>
+		<Menu v-if="user"/>
 		<Content/>
 		<Footer/>
 	</div>
@@ -17,7 +17,7 @@ import Menu    from '@/components/Menu'
 export default {
 	name: "App",
 	components:{ Header, Footer, Content, Menu },
-	computed: mapState(['isMenuVisible'])
+	computed: mapState(['isMenuVisible', 'user'])
 }
 </script>
 
